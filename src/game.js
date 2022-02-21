@@ -84,15 +84,28 @@ function create() {
 
   this.turunkanBatangPohon = function () {
     for (var i = 0; i < arrayBatangPohon.length; i++) {
-      batangPohon = arrayBatangPohon[i];
+      var batangPohon = arrayBatangPohon[i];
       batangPohon.y = config.height - 70 * (i + 1);
     }
+
+    var batangpohonbaru = this.mengisiBatangPohon();
+    var batangPohonTeratas = arrayBatangPohon[arrayBatangPohon.length - 1];
+
+    batangpohonbaru.y = batangPohonTeratas.y - 70;
+    batangpohonbaru.x = batangPohonTeratas.x;
+    batangpohonbaru.angle = 0;
+    arrayBatangPohon.push(batangpohonbaru);
   };
 
-  this.mengisiBatangPohon = function (obj_batangpohon) {
-    var panjangPohon = arrayBatangPohon.length();
-    //var
-    //obj_batangpohon.x = arr
+  this.mengisiBatangPohon = function () {
+    var batangpohonbaru = null;
+    if (poolArrayBatangPohon.length > 0) {
+      batangpohonbaru = poolArrayBatangPohon[0];
+      poolArrayBatangPohon.shift();
+    } else {
+      batangpohonbaru = this.add.image(240, config.height - 70 * i, "log");
+    }
+    return batangpohonbaru;
   };
 }
 function update() {}
