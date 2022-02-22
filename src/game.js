@@ -17,6 +17,8 @@ function preload() {
   this.load.image("char", "assets/char-0.png");
   this.load.image("bg", "assets/img_bg.png");
   this.load.image("log", "assets/basic-log.png");
+  this.load.image("branch1", "assets/branch-1.png");
+  this.load.image("branch2", "assets/branch-2.png");
 }
 function create() {
   this.add.image(config.width * 0.5, config.height * 0.5, "bg");
@@ -107,5 +109,34 @@ function create() {
     }
     return batangpohonbaru;
   };
+
+  this.testingContainer = function () {
+    var container = this.add.container(80, config.height - 70);
+
+    container.add(this.add.image(0, 0, "log"));
+    container.add(this.add.image(45, 0, "branch1"));
+    container.add(this.add.image(-45, 0, "branch1").setFlip(true));
+    container.setData("ranting", "kanan");
+
+    this.tweens.add({
+      targets: container,
+      ease: "Linear",
+      duration: 1000,
+      y: 0,
+      yoyo: true,
+      //repeat: -1,
+      onComplete: function (container, objs) {
+        //console.log(container.getData("ranting"));
+        console.log(objs[0].getData("ranting"));
+        console.log(container);
+      },
+    });
+
+    console.log(container.getData("ranting"));
+    //this.add.image(85, config.height - 70, "branch1");
+    //this.add.image(0, config.height - 70, "branch1").setFlip(true);
+  };
+
+  this.testingContainer();
 }
 function update() {}
