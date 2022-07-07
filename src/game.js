@@ -35,14 +35,37 @@ function create() {
     return container;
   };
 
-  this.mengisiBatangPohon = function () {
+  /**
+   *
+   * @param {number} posisiRanting -1 tidak ada ranting, 0 kanan, 1 kiri, 2 kanan kiri, default adalah 2
+   * @returns Phaser Container batang pohon
+   */
+  this.mengisiBatangPohon = function (posisiRanting) {
+    if (posisiRanting === undefined) posisiRanting = 2;
     var batangPohonBaru = null;
     if (poolArrayBatangPohonTidakTerpakai.length > 0) {
       batangPohonBaru = poolArrayBatangPohonTidakTerpakai[0];
       poolArrayBatangPohonTidakTerpakai.shift();
+      batangPohonBaru.iterate((child) => {
+        child.visible = true;
+      });
     } else {
       batangPohonBaru = this.tambahkanBatangPohon();
     }
+
+    if (posisiRanting == -1) {
+      var rantingKanan = batangPohonBaru.getAt(1);
+      rantingKanan.visible = false;
+      var rantingKiri = batangPohonBaru.getAt(2);
+      rantingKiri.visible = false;
+    } else if (posisiRanting == 0) {
+      var rantingKiri = batangPohonBaru.getAt(2);
+      rantingKiri.visible = false;
+    } else if (posisiRanting == 1) {
+      var rantingKanan = batangPohonBaru.getAt(1);
+      rantingKanan.visible = false;
+    }
+
     return batangPohonBaru;
   };
 
@@ -86,7 +109,8 @@ function create() {
       batangPohon.y = config.height - 70 * (i + 1);
     }
 
-    var batangPohonBaru = this.mengisiBatangPohon();
+    var random = Phaser.Math.Between(0, 1);
+    var batangPohonBaru = this.mengisiBatangPohon(random);
     var batangPohonTeratas = arrayBatangPohon[arrayBatangPohon.length - 1];
 
     batangPohonBaru.y = batangPohonTeratas.y - 70;
@@ -103,6 +127,19 @@ function create() {
 
   for (var i = 1; i < 10; i++) {
     var batangPohon = this.tambahkanBatangPohon();
+    if (i == 1) {
+      var rantingKiri = batangPohon.getAt(2);
+      rantingKiri.visible = false;
+    } else if (i % 2 == 0) {
+      var rantingKanan = batangPohon.getAt(1);
+      rantingKanan.visible = false;
+      var rantingKiri = batangPohon.getAt(2);
+      rantingKiri.visible = false;
+    } else {
+      var random = Phaser.Math.Between(1, 2);
+      var ranting = batangPohon.getAt(random);
+      ranting.visible = false;
+    }
 
     batangPohon.setPosition(240, config.height - 70 * i);
     arrayBatangPohon.push(batangPohon);
