@@ -22,6 +22,7 @@ function preload() {
 function create() {
   this.tambahkanBatangPohon = function () {
     var container = this.add.container(0, 0);
+    container.setDataEnabled();
 
     var batangPohon = this.add.image(0, 0, "log");
     var rantingKanan = this.add.image(45, 0, "ranting");
@@ -130,15 +131,18 @@ function create() {
     if (i == 1) {
       var rantingKiri = batangPohon.getAt(2);
       rantingKiri.visible = false;
+      batangPohon.data.set("ranting", 2);
     } else if (i % 2 == 0) {
       var rantingKanan = batangPohon.getAt(1);
       rantingKanan.visible = false;
       var rantingKiri = batangPohon.getAt(2);
       rantingKiri.visible = false;
+      batangPohon.data.set("ranting", 0);
     } else {
       var random = Phaser.Math.Between(1, 2);
       var ranting = batangPohon.getAt(random);
       ranting.visible = false;
+      batangPohon.data.set("ranting", random);
     }
 
     batangPohon.setPosition(240, config.height - 70 * i);
