@@ -12,6 +12,7 @@ var config = {
 var game = new Phaser.Game(config);
 var arrayBatangPohon = [];
 var poolArrayBatangPohonTidakTerpakai = [];
+const DATA_RANTING_KOSONG = 0;
 
 function preload() {
   this.load.image("char", "assets/char-0.png");
@@ -38,7 +39,7 @@ function create() {
 
   /**
    *
-   * @param {number} posisiRanting -1 tidak ada ranting, 0 kanan, 1 kiri, 2 kanan kiri, default adalah 2
+   * @param {number} posisiRanting 0 tidak ada ranting,1 kanan, 2 kiri, default adalah 2
    * @returns Phaser Container batang pohon
    */
   this.mengisiBatangPohon = function (posisiRanting) {
@@ -54,17 +55,20 @@ function create() {
       batangPohonBaru = this.tambahkanBatangPohon();
     }
 
-    if (posisiRanting == -1) {
+    if (posisiRanting == 0) {
       var rantingKanan = batangPohonBaru.getAt(1);
       rantingKanan.visible = false;
       var rantingKiri = batangPohonBaru.getAt(2);
       rantingKiri.visible = false;
-    } else if (posisiRanting == 0) {
+      batangPohonBaru.data.set("ranting", 0);
+    } else if (posisiRanting == 2) {
       var rantingKiri = batangPohonBaru.getAt(2);
       rantingKiri.visible = false;
+      batangPohonBaru.data.set("ranting", 2);
     } else if (posisiRanting == 1) {
       var rantingKanan = batangPohonBaru.getAt(1);
       rantingKanan.visible = false;
+      batangPohonBaru.data.set("ranting", 1);
     }
 
     return batangPohonBaru;
@@ -110,9 +114,13 @@ function create() {
       batangPohon.y = config.height - 70 * (i + 1);
     }
 
-    var random = Phaser.Math.Between(0, 1);
-    var batangPohonBaru = this.mengisiBatangPohon(random);
+    var pilihRanting = Phaser.Math.Between(1, 2);
     var batangPohonTeratas = arrayBatangPohon[arrayBatangPohon.length - 1];
+    var dataRanting = batangPohonTeratas.data.get("ranting");
+    if (dataRanting > DATA_RANTING_KOSONG) {
+      pilihRanting = 0;
+    }
+    var batangPohonBaru = this.mengisiBatangPohon(pilihRanting);
 
     batangPohonBaru.y = batangPohonTeratas.y - 70;
     batangPohonBaru.x = batangPohonTeratas.x;
@@ -128,11 +136,7 @@ function create() {
 
   for (var i = 1; i < 10; i++) {
     var batangPohon = this.tambahkanBatangPohon();
-    if (i == 1) {
-      var rantingKiri = batangPohon.getAt(2);
-      rantingKiri.visible = false;
-      batangPohon.data.set("ranting", 2);
-    } else if (i % 2 == 0) {
+    if (i % 2 == 0 || i == 1) {
       var rantingKanan = batangPohon.getAt(1);
       rantingKanan.visible = false;
       var rantingKiri = batangPohon.getAt(2);
@@ -157,6 +161,7 @@ function create() {
     this.animasiBatangPohon(batangpohon, "kiri");
     arrayBatangPohon.shift();
     this.turunkanBatangPohon();
+    //check posisi batang pohon terbawah dan posisi player
   });
 
   this.input.keyboard.on("keydown-LEFT", () => {
@@ -167,6 +172,7 @@ function create() {
     this.animasiBatangPohon(batangpohon, "kanan");
     arrayBatangPohon.shift();
     this.turunkanBatangPohon();
+    //check posisi batang pohon terbawah dan posisi player
   });
 }
 function update() {}
