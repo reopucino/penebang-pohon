@@ -13,6 +13,8 @@ var game = new Phaser.Game(config);
 var arrayBatangPohon = [];
 var poolArrayBatangPohonTidakTerpakai = [];
 const DATA_RANTING_KOSONG = 0;
+const POSISI_PLAYER_KIRI = 1;
+const POSISI_PLAYER_KANAN = 2;
 
 function preload() {
   this.load.image("char", "assets/char-0.png");
@@ -131,6 +133,19 @@ function create() {
     arrayBatangPohon.push(batangPohonBaru);
   };
 
+  this.cekTumbukan = function (posisiPlayer) {
+    var batangPohon = arrayBatangPohon[0];
+    var posisiBatangPohon = batangPohon.data.get("ranting");
+    if (posisiPlayer == posisiBatangPohon) {
+      this.permainanBerakhir();
+    }
+  };
+
+  this.permainanBerakhir = function () {
+    console.log("permainan berakhir");
+    this.input.keyboard.enabled = false;
+  };
+
   this.add.image(config.width * 0.5, config.height * 0.5, "bg");
   var char = this.add.image(200, 570, "char");
 
@@ -156,23 +171,27 @@ function create() {
   this.input.keyboard.on("keydown-RIGHT", () => {
     char.x = 280;
     char.flipX = true;
+    this.cekTumbukan(POSISI_PLAYER_KANAN);
     //tumbangkan pohon ke kiri
     var batangpohon = arrayBatangPohon[0];
     this.animasiBatangPohon(batangpohon, "kiri");
     arrayBatangPohon.shift();
     this.turunkanBatangPohon();
     //check posisi batang pohon terbawah dan posisi player
+    this.cekTumbukan(POSISI_PLAYER_KANAN);
   });
 
   this.input.keyboard.on("keydown-LEFT", () => {
     char.x = 200;
     char.flipX = false;
+    this.cekTumbukan(POSISI_PLAYER_KIRI);
     //tumbangkan pohon ke kiri
     var batangpohon = arrayBatangPohon[0];
     this.animasiBatangPohon(batangpohon, "kanan");
     arrayBatangPohon.shift();
     this.turunkanBatangPohon();
     //check posisi batang pohon terbawah dan posisi player
+    this.cekTumbukan(POSISI_PLAYER_KIRI);
   });
 }
 function update() {}
