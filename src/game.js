@@ -12,9 +12,9 @@ var config = {
 var game = new Phaser.Game(config);
 var arrayBatangPohon = [];
 var poolArrayBatangPohonTidakTerpakai = [];
-const DATA_RANTING_KOSONG = 0;
-const POSISI_PLAYER_KIRI = 1;
-const POSISI_PLAYER_KANAN = 2;
+var DATA_RANTING_KOSONG = 0;
+var POSISI_PLAYER_KIRI = 1;
+var POSISI_PLAYER_KANAN = 2;
 
 function preload() {
   this.load.image("char", "assets/char-0.png");
@@ -41,7 +41,7 @@ function create() {
 
   /**
    *
-   * @param {number} posisiRanting 0 tidak ada ranting,1 kanan, 2 kiri, default adalah 2
+   * @param {number} posisiRanting 0 tidak ada ranting,1 kanan hilang, 2 kiri hilang, default adalah 2
    * @returns Phaser Container batang pohon
    */
   this.mengisiBatangPohon = function (posisiRanting) {
@@ -50,7 +50,7 @@ function create() {
     if (poolArrayBatangPohonTidakTerpakai.length > 0) {
       batangPohonBaru = poolArrayBatangPohonTidakTerpakai[0];
       poolArrayBatangPohonTidakTerpakai.shift();
-      batangPohonBaru.iterate((child) => {
+      batangPohonBaru.iterate(function (child) {
         child.visible = true;
       });
     } else {
