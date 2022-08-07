@@ -12,9 +12,9 @@ var config = {
 var game = new Phaser.Game(config);
 var arrayBatangPohon = [];
 var poolArrayBatangPohonTidakTerpakai = [];
-var DATA_RANTING_KOSONG = 0;
-var POSISI_PLAYER_KIRI = 1;
-var POSISI_PLAYER_KANAN = 2;
+const DATA_RANTING_KOSONG = 0;
+const POSISI_PLAYER_KIRI = 1;
+const POSISI_PLAYER_KANAN = 2;
 
 function preload() {
   this.load.image("char", "assets/char-0.png");
