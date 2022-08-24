@@ -13,15 +13,27 @@ var game = new Phaser.Game(config);
 var arrayBatangPohon = [];
 var poolArrayBatangPohonTidakTerpakai = [];
 var score = 0;
+var timeCountDown = 10000;
+var indicatortimer = null;
+var reduceTimer = 1;
+var gameover = false;
+
 const DATA_RANTING_KOSONG = 0;
 const POSISI_PLAYER_KIRI = 1;
 const POSISI_PLAYER_KANAN = 2;
+const MAX_DISPLAY_WIDTH = 127;
+const MAX_TIME_COUNT = 10000;
+const ADDITIONAL_TIMER = 200;
+const MIN_REDUCER = 0.3;
 
 function preload() {
   this.load.image("char", "assets/char-0.png");
   this.load.image("bg", "assets/img_bg.png");
   this.load.image("log", "assets/basic-log.png");
   this.load.image("ranting", "assets/branch-1.png");
+
+  this.load.image("ui-indicator", "assets/red_indicator.png");
+  this.load.image("bg-indicator", "assets/grey_bg.png");
 }
 function create() {
   this.tambahkanBatangPohon = function () {
@@ -147,6 +159,7 @@ function create() {
 
   this.permainanBerakhir = function () {
     console.log("permainan berakhir");
+    gameover = true;
     this.input.keyboard.enabled = false;
   };
 
@@ -178,27 +191,40 @@ function create() {
     .setOrigin(0.5);
   textDisplay.setDepth(1);
 
+  this.add.image(80, 30, "bg-indicator").setScale(0.7, 0.7);
+  indicatortimer = this.add.image(16, 30, "ui-indicator").setScale(0.5, 0.5).setOrigin(0, 0.5);
+  indicatortimer.displayWidth = MAX_DISPLAY_WIDTH;
+  //console.log(indicatortimer.displayWidth);
+  //indicatortimer.angle = 90;
+
   this.input.keyboard.on("keydown-RIGHT", () => {
+    if (gameover) return;
     char.x = 280;
     char.flipX = true;
-    this.cekTumbukan(POSISI_PLAYER_KANAN);
+    var tumbukan = this.cekTumbukan(POSISI_PLAYER_KANAN);
+    if (tumbukan) return;
     //tumbangkan pohon ke kiri
     var batangpohon = arrayBatangPohon[0];
     this.animasiBatangPohon(batangpohon, "kiri");
     arrayBatangPohon.shift();
     this.turunkanBatangPohon();
     //check posisi batang pohon terbawah dan posisi player
-    var tumbukan = this.cekTumbukan(POSISI_PLAYER_KANAN);
+    tumbukan = this.cekTumbukan(POSISI_PLAYER_KANAN);
     if (!tumbukan) {
       score += 1;
       textDisplay.text = score;
+      if (reduceTimer < MIN_REDUCER) reduceTimer = MIN_REDUCER;
+      console.log(reduceTimer);
+      timeCountDown += ADDITIONAL_TIMER * reduceTimer;
     }
   });
 
   this.input.keyboard.on("keydown-LEFT", () => {
+    if (gameover) return;
     char.x = 200;
     char.flipX = false;
-    this.cekTumbukan(POSISI_PLAYER_KIRI);
+    var tumbukan = this.cekTumbukan(POSISI_PLAYER_KIRI);
+    if (tumbukan) return;
     //tumbangkan pohon ke kiri
     var batangpohon = arrayBatangPohon[0];
     this.animasiBatangPohon(batangpohon, "kanan");
@@ -209,7 +235,20 @@ function create() {
     if (!tumbukan) {
       score += 1;
       textDisplay.text = score;
+      if (reduceTimer < MIN_REDUCER) reduceTimer = MIN_REDUCER;
+      console.log(reduceTimer);
+      timeCountDown += ADDITIONAL_TIMER * reduceTimer;
     }
   });
 }
-function update() {}
+function update(timestep, dt) {
+  if (gameover) return;
+  timeCountDown -= dt;
+  if (timeCountDown <= 0) {
+    timeCountDown = 0;
+    gameover = true;
+  }
+  reduceTimer -= dt * 0.0001;
+  if (timeCountDown > MAX_TIME_COUNT) timeCountDown = MAX_TIME_COUNT;
+  indicatortimer.displayWidth = MAX_DISPLAY_WIDTH * (timeCountDown / MAX_TIME_COUNT);
+}
