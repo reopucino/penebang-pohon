@@ -34,6 +34,10 @@ function preload() {
 
   this.load.image("ui-indicator", "assets/red_indicator.png");
   this.load.image("bg-indicator", "assets/grey_bg.png");
+
+  //sound here
+  this.load.audio("bgm", "assets/bgm/monkey-drama.mp3");
+  this.load.audio("impact", "assets/sfx/impact.mp3");
 }
 function create() {
   this.tambahkanBatangPohon = function () {
@@ -163,6 +167,8 @@ function create() {
     this.input.keyboard.enabled = false;
   };
 
+  this.sound.add("bgm").play({ loop: true });
+
   this.add.image(config.width * 0.5, config.height * 0.5, "bg");
   var char = this.add.image(200, 570, "char");
 
@@ -192,7 +198,10 @@ function create() {
   textDisplay.setDepth(1);
 
   this.add.image(80, 30, "bg-indicator").setScale(0.7, 0.7);
-  indicatortimer = this.add.image(16, 30, "ui-indicator").setScale(0.5, 0.5).setOrigin(0, 0.5);
+  indicatortimer = this.add
+    .image(16, 30, "ui-indicator")
+    .setScale(0.5, 0.5)
+    .setOrigin(0, 0.5);
   indicatortimer.displayWidth = MAX_DISPLAY_WIDTH;
   //console.log(indicatortimer.displayWidth);
   //indicatortimer.angle = 90;
@@ -216,6 +225,7 @@ function create() {
       if (reduceTimer < MIN_REDUCER) reduceTimer = MIN_REDUCER;
       console.log(reduceTimer);
       timeCountDown += ADDITIONAL_TIMER * reduceTimer;
+      this.sound.play("impact");
     }
   });
 
@@ -238,6 +248,8 @@ function create() {
       if (reduceTimer < MIN_REDUCER) reduceTimer = MIN_REDUCER;
       console.log(reduceTimer);
       timeCountDown += ADDITIONAL_TIMER * reduceTimer;
+
+      this.sound.play("impact");
     }
   });
 }
