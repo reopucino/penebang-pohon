@@ -34,9 +34,10 @@ function preload() {
 
   this.load.image("ui-indicator", "assets/red_indicator.png");
   this.load.image("bg-indicator", "assets/grey_bg.png");
+  this.load.image("popup", "assets/grey_panel.png");
 
   //sound here
-  this.load.audio("bgm", "assets/bgm/monkey-drama.mp3");
+  //this.load.audio("bgm", "assets/bgm/monkey-drama.mp3");
   this.load.audio("impact", "assets/sfx/impact.mp3");
 }
 function create() {
@@ -164,10 +165,20 @@ function create() {
   this.permainanBerakhir = function () {
     console.log("permainan berakhir");
     gameover = true;
+    this.add
+      .image(config.width * 0.5, config.height * 0.5, "popup")
+      .setScale(3);
+    this.add
+      .text(config.width * 0.5, config.height * 0.5, "GAME OVER", {
+        fontSize: 50,
+        color: "#000",
+        align: "center",
+      })
+      .setOrigin(0.5);
     this.input.keyboard.enabled = false;
   };
 
-  this.sound.add("bgm").play({ loop: true });
+  //this.sound.add("bgm").play({ loop: true });
 
   this.add.image(config.width * 0.5, config.height * 0.5, "bg");
   var char = this.add.image(200, 570, "char");
@@ -259,8 +270,20 @@ function update(timestep, dt) {
   if (timeCountDown <= 0) {
     timeCountDown = 0;
     gameover = true;
+    this.add
+      .image(config.width * 0.5, config.height * 0.5, "popup")
+      .setScale(3);
+
+    this.add
+      .text(config.width * 0.5, config.height * 0.5, "GAME OVER", {
+        fontSize: 50,
+        color: "#000",
+        align: "center",
+      })
+      .setOrigin(0.5);
   }
   reduceTimer -= dt * 0.0001;
   if (timeCountDown > MAX_TIME_COUNT) timeCountDown = MAX_TIME_COUNT;
-  indicatortimer.displayWidth = MAX_DISPLAY_WIDTH * (timeCountDown / MAX_TIME_COUNT);
+  indicatortimer.displayWidth =
+    MAX_DISPLAY_WIDTH * (timeCountDown / MAX_TIME_COUNT);
 }
