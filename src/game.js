@@ -37,7 +37,7 @@ function preload() {
   this.load.image("popup", "assets/grey_panel.png");
 
   //sound here
-  //this.load.audio("bgm", "assets/bgm/monkey-drama.mp3");
+  this.load.audio("bgm", "assets/bgm/happy_adveture.mp3");
   this.load.audio("impact", "assets/sfx/impact.mp3");
 }
 function create() {
@@ -178,7 +178,7 @@ function create() {
     this.input.keyboard.enabled = false;
   };
 
-  //this.sound.add("bgm").play({ loop: true });
+  this.sound.add("bgm").play({ loop: true });
 
   this.add.image(config.width * 0.5, config.height * 0.5, "bg");
   var char = this.add.image(200, 570, "char");
